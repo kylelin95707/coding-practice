@@ -1,0 +1,57 @@
+#include <stdio.h>
+#include <string.h>
+
+void  Merge(int *data,int front, int mid, int end)
+{
+    int left[mid-front+1], right[end-mid];
+    int leftcount = 0, rightcount = 0;
+    int leftlen = (sizeof(left)/sizeof(int)), rightlen = (sizeof(right)/sizeof(int));
+    int i;
+    
+    memcpy(left,&data[front],sizeof(left));
+    memcpy(right,&data[mid+1],sizeof(right));
+    
+    for(int i = front ; i <= end ; i++)
+    {
+        if(left[leftcount] <= right[rightcount])
+        {
+            if(leftcount >= leftlen)
+                data[i] = right[rightcount++]; 
+            else
+                data[i] = left[leftcount++]; 
+        }
+        else
+        {
+            if(rightcount >= rightlen)
+                data[i] = left[leftcount++]; 
+            else
+                data[i] = right[rightcount++]; 
+        }
+    }
+}
+
+void MergeSort(int *data, int front, int end)
+{
+    if(front < end)
+    {
+        int mid = (front+end)/2;
+        MergeSort(data,front,mid);
+        MergeSort(data,mid+1,end); 
+        Merge(data,front,mid,end);
+    }
+}
+
+int main()
+{
+    // init data array
+    int arr[] = { 22, 34, 3, 32, 82, 55, 89, 50, 37, 5, 64, 35, 9, 70 },i;
+    int len = (sizeof(arr)/sizeof(int))-1;
+   
+    MergeSort(arr,0,len);
+    
+    // print result
+    for(i=0;i<=len;i++)
+        printf("%d\n",arr[i]);
+
+    return 0;
+}
